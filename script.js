@@ -6,17 +6,19 @@
 import { createBoard } from "./minesweeper.js"
 
 /*establecemos los elementos globales*/
-const BOARD_SIZE = 10
-const TOTAL_MINES = 10
+const BOARD_SIZE = 16
+const TOTAL_MINES = 40
 
 const minesLeftSpan = document.getElementById('mines-left')
 const board = createBoard(BOARD_SIZE, TOTAL_MINES)
 const boardElement = document.querySelector('.board')
+const boardArray = []
 
 boardElement.style.grid = `auto-flow 50px / repeat(${board.length},50px)`
 minesLeftSpan.textContent = TOTAL_MINES
 
-for (let i = board.length - 1; i >= 0; i--) { // generamos el board en orden inverso para que el (0,0) esté abajo a la izquierda
+for (let i = 0; i <= board.length - 1; i++) { // generamos el board en orden inverso para que el (0,0) esté abajo a la izquierda
+    boardArray.push([])
     for (const tile of board[i]) {
         let div = document.createElement('div')
 
@@ -33,6 +35,8 @@ for (let i = board.length - 1; i >= 0; i--) { // generamos el board en orden inv
 
         //agregamos el div al elemento .board
         boardElement.appendChild(div)
+
+        boardArray[i].push(div)
     }
 }
 
@@ -58,9 +62,15 @@ function reveal(div) {
     div.classList.remove('marked')
     div.dataset.revealed = 'true'
 
+    const xPositionCurrentDiv = parseInt(div.dataset.xPosition)
+    const yPositionCurrentDiv = parseInt(div.dataset.yPosition)
     let value = div.dataset.value
 
-    if (value === '0') revealZeros(div)
+    if (value === '0') {
+        div.innerHTML = value
+        let closeDivs = getCloseDivs(xPositionCurrentDiv, yPositionCurrentDiv)
+        closeDivs.forEach(reveal.bind(null))
+    }
     else if (value === '-1') {
         div.classList.add('mined')
         setTimeout(() => alert('HAS PERDIDO'), 50)
@@ -72,43 +82,19 @@ function reveal(div) {
     checkVictory()
 }
 
-
-/* 
- * funcion que se ejecuta si revelas una casilla con valor 0
- * revela las casillas alrededor, y ejecuta de nuevo la funcion para las casillas que valen 0, y asi sucesivamente
- */
-function revealZeros(div) {
-    const xPositionCurrentDiv = parseInt(div.dataset.xPosition)
-    const yPositionCurrentDiv = parseInt(div.dataset.yPosition)
-
-    //pasamos a un array todas las casillas
-    const allDivs = Array.from(document.querySelectorAll('.board > div'))
-
-    //filtramos las casillas que rodean a la seleccionada (incluida ella misma)
-    let closeDivs = allDivs.filter(item => {
-        let xPositionItem = parseInt(item.dataset.xPosition)
-        let yPositionItem = parseInt(item.dataset.yPosition)
-        let xDistance = Math.abs(xPositionCurrentDiv - xPositionItem)
-        let yDistance = Math.abs(yPositionCurrentDiv - yPositionItem)
-        return (xDistance <= 1) && (yDistance <= 1)
-    })
-
-    //iteramos
-    let index = 0;
-    for (let closeDiv of closeDivs) {
-        index++;
-        let xPositionItem = parseInt(closeDiv.dataset.xPosition)
-        let yPositionItem = parseInt(closeDiv.dataset.yPosition)
-        let valueItem = parseInt(closeDiv.dataset.value)
-
-        closeDiv.innerHTML = valueItem
-        closeDiv.classList.remove('marked')
-        closeDiv.dataset.revealed = 'true'
-        //nos saltamos la propia casilla
-        if ((xPositionItem === xPositionCurrentDiv) && (yPositionItem === yPositionCurrentDiv)) continue
-         if(valueItem === 0) setTimeout(() => revealZeros(closeDiv),index)
-        //if(valueItem === 0) setTimeout(() => revealZeros.bind(null, closeDiv),index*10)
+/*funcion que devuelve un array con las casillas colindantes (incluyendo la propia)*/
+function getCloseDivs(xPosition, yPosition) {
+    let closeDivs = []
+    for (let x = xPosition - 2; x <= xPosition; x++) {
+        for (let y = yPosition - 2; y <= yPosition; y++) {
+            let tile = boardArray[y]?.[x]
+            if (tile) {
+                if ((parseInt(tile.dataset.xPosition) === xPosition) && (parseInt(tile.dataset.yPosition) === yPosition)) continue
+                closeDivs.push(boardArray[y][x])
+            }
+        }
     }
+    return closeDivs
 }
 
 
