@@ -16,3 +16,33 @@ body{
     align-items: center;
     justify-content: center;
 }
+
+.board{
+    display:grid;
+    gap: 5px;
+
+    width: auto;
+    margin: 25px auto 80px auto;
+    
+    font-size: 22px;
+}
+
+.board > div {
+    background-color: rgba(119, 119, 119, 1);
+    
+    padding-top: 11px;
+
+    text-align: center;
+}
+
+.board > div.marked{
+    background-color: #FEFE06;
+}
+
+.board > div[data-revealed = 'true']{
+    background-color: rgba(119, 119, 119, 0.5);
+}
+
+.board > div.mined{
+    background-color: #F90101;
+}
