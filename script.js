@@ -21,7 +21,8 @@ minesLeftSpan.textContent = TOTAL_MINES
 const EMOJI_FACES = {
     regular: '&#128522;',
     click: '&#128562;',
-    loser: '&#128565;'
+    loser: '&#128565;',
+    winner:'&#129321;'
 }
 const emojisDiv = document.querySelector('.emoji-faces')
 const emojisDiv2 = document.querySelector('.emoji-faces:focus')
@@ -135,7 +136,8 @@ function checkVictory() {
     const revealedDivs = allDivs.filter((item) => item.dataset.revealed === "true")
 
     if (revealedDivs.length === (BOARD_SIZE ** 2 - TOTAL_MINES)) {
-        alert('HAS GANADO')
-        reloadDiv.classList.add('displayed')
+        emojisDiv.innerHTML = EMOJI_FACES['winner']
+        setTimeout(() => alert('HAS GANADO'),50)
+        setTimeout(() => reloadDiv.classList.add('displayed'),100)
     }
 }
