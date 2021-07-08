@@ -14,6 +14,14 @@ const board = createBoard(BOARD_SIZE, TOTAL_MINES)
 const boardElement = document.querySelector('.board')
 const boardArray = []
 
+const EMOJI_FACES = {
+    regular: '&#128522;',
+    click: '&#128562;',
+    loser: '&#128565;'
+}
+const emojisDiv = document.querySelector('.emoji-faces')
+const emojisDiv2 = document.querySelector('.emoji-faces:focus')
+
 boardElement.style.grid = `auto-flow 50px / repeat(${board.length},50px)`
 minesLeftSpan.textContent = TOTAL_MINES
 
@@ -32,6 +40,10 @@ for (let i = 0; i <= board.length - 1; i++) { // generamos el board en orden inv
         div.addEventListener('contextmenu', (e) => e.preventDefault())
         div.addEventListener('contextmenu', (e) => mark(div))
         div.addEventListener('click', (e) => reveal(div))
+
+        //establecemos los eventos para cambiar el emoji al hacer click
+        div.addEventListener('mousedown', (e) => emojisDiv.innerHTML = EMOJI_FACES['click'])
+        div.addEventListener('mouseup', (e) => emojisDiv.innerHTML = EMOJI_FACES['regular'])
 
         //agregamos el div al elemento .board
         boardElement.appendChild(div)
@@ -73,6 +85,7 @@ function reveal(div) {
     }
     else if (value === '-1') {
         div.classList.add('mined')
+        emojisDiv.innerHTML = EMOJI_FACES['loser']
         setTimeout(() => alert('HAS PERDIDO'), 50)
         setTimeout(() => location.reload(), 100)
     }

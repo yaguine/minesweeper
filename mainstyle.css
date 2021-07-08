@@ -17,6 +17,14 @@ body{
     justify-content: center;
 }
 
+.emoji-faces{
+    width: 60px;
+    height: 60px;
+
+    text-align: center;
+    font-size: 45px;
+}
+
 .board{
     display:grid;
     gap: 5px;
