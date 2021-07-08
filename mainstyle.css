@@ -4,6 +4,8 @@
     -#777777 casilla normal*/
 
 body{
+    position: relative;
+
     height: 100%;
     margin: 0;
 
@@ -57,4 +59,39 @@ body{
 
 .board > div:active {
     transform: scale(0.8);
+}
+
+#reload-div{
+    position: absolute;
+
+    display:none;
+    justify-content: center;
+    align-items: flex-start;
+
+    width:100%;
+    height:100%;
+
+    background-color: rgba(0,0,0,0.7);
+}
+
+#reload-div.displayed{
+    display:flex;
+}
+
+#reload-div > button{
+    position: fixed;
+
+    margin-top:138px;
+    padding:20px;
+
+    border:none;
+    border-radius: 35px;
+
+    background-color:rgb(35, 82, 182);
+
+    color: white;
+    font-size: 25px;
+}
+
+#reload-div > button.clicked{
 }

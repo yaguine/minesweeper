@@ -5,7 +5,9 @@
 
 import { createBoard } from "./minesweeper.js"
 
+
 /*establecemos los elementos globales*/
+
 const BOARD_SIZE = 16
 const TOTAL_MINES = 40
 
@@ -13,6 +15,8 @@ const minesLeftSpan = document.getElementById('mines-left')
 const board = createBoard(BOARD_SIZE, TOTAL_MINES)
 const boardElement = document.querySelector('.board')
 const boardArray = []
+boardElement.style.grid = `auto-flow 50px / repeat(${board.length},50px)`
+minesLeftSpan.textContent = TOTAL_MINES
 
 const EMOJI_FACES = {
     regular: '&#128522;',
@@ -22,8 +26,13 @@ const EMOJI_FACES = {
 const emojisDiv = document.querySelector('.emoji-faces')
 const emojisDiv2 = document.querySelector('.emoji-faces:focus')
 
-boardElement.style.grid = `auto-flow 50px / repeat(${board.length},50px)`
-minesLeftSpan.textContent = TOTAL_MINES
+const reloadDiv = document.getElementById('reload-div')
+const reloadButton = reloadDiv.querySelector('button')
+reloadButton.addEventListener('click',() => location.reload())
+
+
+
+/*Rellenamos el board */
 
 for (let i = 0; i <= board.length - 1; i++) { // generamos el board en orden inverso para que el (0,0) esté abajo a la izquierda
     boardArray.push([])
@@ -87,7 +96,7 @@ function reveal(div) {
         div.classList.add('mined')
         emojisDiv.innerHTML = EMOJI_FACES['loser']
         setTimeout(() => alert('HAS PERDIDO'), 50)
-        setTimeout(() => location.reload(), 100)
+        setTimeout(() => reloadDiv.classList.add('displayed'), 100)
     }
     else div.innerHTML = value
 
@@ -127,6 +136,6 @@ function checkVictory() {
 
     if (revealedDivs.length === (BOARD_SIZE ** 2 - TOTAL_MINES)) {
         alert('HAS GANADO')
-        location.reload()
+        reloadDiv.classList.add('displayed')
     }
 }
