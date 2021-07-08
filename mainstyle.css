@@ -54,3 +54,7 @@ body{
 .board > div.mined{
     background-color: #F90101;
 }
+
+.board > div:active {
+    transform: scale(0.8);
+}
